@@ -1,70 +1,51 @@
-# Getting Started with Create React App
+# CONFIGURACIÓN FIRESTORE
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+1. Hacerse cuenta en Firebase
 
-## Available Scripts
+2. Ingresar a la consola de Firebase 
 
-In the project directory, you can run:
+3. Añade una aplicación WEB: ir a descripción (o información) general del proyecto, agregar un proyecto y agarrar el código
 
-### `npm start`
+```var firebaseConfig = {
+    apiKey: "AIzaSyBOVExy0eI-xXbYVCO9-yG07j8S9WK7MKs",
+    authDomain: "fb-crud-b1ec5.firebaseapp.com",
+    projectId: "fb-crud-b1ec5",
+    storageBucket: "fb-crud-b1ec5.appspot.com",
+    messagingSenderId: "827459989097",
+    appId: "1:827459989097:web:d32310d166743062c87cf8"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+y llevarlo a un archivo firebase.js en tu proyecto.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+4. Importar  **import 'firebase/firestore'** en firebase.js
 
-### `npm test`
+5. Exportar firestore: **export const db = fb.firestore();** ===> db va a ser la base de datos de firestore.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+6. Para crear un nuevo "esquema"
+    db /* base de datos firestore */
+                    .collection('links') /* creas el esquema/collection "links" */
+                    .doc() /* guardas un doc nuevo y se genera un id único */
+                    .set(Object) /* se le agrega a esa collection el Object (que viene desde algún estado) */
 
-### `npm run build`
+7. Para editar un objeto específico de la colección: 
+    db.collection('links').doc(Id).update(Object)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+8. Para hacer get de un objeto específico: 
+    db.collection('links').doc(id).get();
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+9. Para obtener todos los objetos:
+            db <!-- la firestore -->
+            .collection('links') <!-- la colección -->
+            .onSnapshot((querySnapshot) => { 
+                const docs = []
+                querySnapshot.forEach((doc) => { <!-- los objetos que vienen en un arreglo -->
+                    docs.push({ ...doc.data(), id: doc.id })
+                });
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+10. Para eliminar un objeto específico:
+        await   db <!-- se debe usar AWAIT o Promesas porque son operaciones asíncronas -->
+                .collection('links') <!-- colección -->
+                .doc(id)    <!-- obtengo objeto por ID -->
+                .delete()   <!-- borro el objeto que coincide con ese ID -->
